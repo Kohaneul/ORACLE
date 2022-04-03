@@ -1,86 +1,130 @@
 -- DML (INSERT, UPDATE, DELETE)
-
-/*
-    ¹®Á¦ 1 ]
-        emp1 Å×ÀÌºí¿¡ ´ÙÀ½ µ¥ÀÌÅÍ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.
-        ÀÌ¸§  : µÑ¸®
-        Á÷±Þ  : ¸Ó½¿
-        ±Þ¿©  : 10
-        ÀÔ»çÀÏ : ÇöÀç½Ã°£
-*/
-
-INSERT INTO EMP1(ENAME, JOB,SAL,HIREDATE)
-VALUES ("µÑ¸®","¸Ó½¿",10,SYSDATE);
-
-ALTER TABLE EMP1
-MODIFY JOB VARCHAR2(10 CHAR);
-
-ALTER TABLE EMP1
-MODIFY HIREDATE VARCHAR2(20 CHAR);
+CREATE TABLE EMP1
+    ENAME VARCHAR2(10 CHAR) 
 
 
 /*
-    ¹®Á¦ 2 ]
-        emp1 Å×ÀÌºí¿¡ ´ÙÀ½µ¥ÀÌÅÍ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.
-        ÀÌ¸§  : °í±æµ¿
-        Á÷±Þ  : ¾Ö¿Ïµ¿¹°
-        ÀÔ»çÀÏ : 2022³â 03¿ù 21ÀÏ
+    ë¬¸ì œ 1 ]
+        emp1 í…Œì´ë¸”ì— ë‹¤ìŒ ë°ì´í„°ë¥¼ ìž…ë ¥í•˜ì„¸ìš”.
+        ì´ë¦„  : ë‘˜ë¦¬
+        ì§ê¸‰  : ë¨¸ìŠ´
+        ê¸‰ì—¬  : 10
+        ìž…ì‚¬ì¼ : í˜„ìž¬ì‹œê°„
 */
 
-INSERT INTO EMP1(ENAME, JOB,HIREDATE)
-VALUES('°í±æµ¿','¾Ö¿Ïµ¿¹°','2022"³â"03"¿ù"21"ÀÏ"');
-
-
-
-/*
-    ¹®Á¦ 3 ]
-        emp1 Å×ÀÌºí¿¡ ´ÙÀ½ µ¥ÀÌÅÍ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.
-        
-        ÀÌ¸§  : Èñµ¿ÀÌ
-        Á÷±Þ  : ´ëÀå
-        ±Þ¿©  : NULL
-        ÀÔ»çÀÏ : 2022³â 01¿ù 01ÀÏ
-*/
 INSERT INTO EMP1(ENAME, JOB, HIREDATE)
-VALUES('Èñµ¿ÀÌ','´ëÀå','2022³â 01¿ù 01ÀÏ');
+VALUE('ë‘˜ë¦¬','ë¨¸ìŠ´',SYSDATE);
 
 
--- µ¥ÀÌÅÍ ¼öÁ¤
+UPDATE EMP1
+SET HIREDATE = SYSDATE,
+    SAL = 10
+WHERE ENAME = 'ë‘˜ë¦¬';
+
 /*
-    ¹®Á¦ 4 ]
-        emp1 Å×ÀÌºí¿¡¼­ ´ÙÀ½ µ¥ÀÌÅÍ¸¦ ¼öÁ¤ÇÏ¼¼¿ä.
-        Á¦´Ï, ·ÎÁ¦, ¸®»ç, Áö¼ö
-        »ç¿øÀÇ ÀÌ¸§À» ÀÌ¸§¾Õ¿¡ 'Miss.' ºÙ¿©¼­
-        ÀÌ¸§ÀÌ ¸¸µé¾îÁö°Ô ¼öÁ¤ÇÏ¼¼¿ä.
-        ³ª¸ÓÁö»ç¿øµéÀº ÀÌ¸§¾Õ¿¡ 'Mr.' À» ºÙ¿©¼­ 
-        ¼öÁ¤ÇÏ¼¼¿ä.
+    ë¬¸ì œ 2 ]
+        emp1 í…Œì´ë¸”ì— ë‹¤ìŒë°ì´í„°ë¥¼ ìž…ë ¥í•˜ì„¸ìš”.
+        ì´ë¦„  : ê³ ê¸¸ë™
+        ì§ê¸‰  : ì• ì™„ë™ë¬¼
+        ìž…ì‚¬ì¼ : 2022ë…„ 03ì›” 21ì¼
+*/
+
+INSERT INTO EMP1(EMPNO,ENAME,JOB,HIREDATE)
+VALUES(1008,'ê³ ê¸¸ë™','ì• ì™„ë™ë¬¼','2022/03/21');
+
+
+/*
+    ë¬¸ì œ 3 ]
+        emp1 í…Œì´ë¸”ì— ë‹¤ìŒ ë°ì´í„°ë¥¼ ìž…ë ¥í•˜ì„¸ìš”.
+        
+        ì´ë¦„  : í¬ë™ì´
+        ì§ê¸‰  : ëŒ€ìž¥
+        ê¸‰ì—¬  : NULL
+        ìž…ì‚¬ì¼ : 2022ë…„ 01ì›” 01ì¼
+*/
+INSERT INTO EMP1(EMPNO,ENAME, JOB, HIREDATE)
+VALUES(1006,'í¬ë™ì´','ëŒ€ìž¥','2022/01/01');
+
+
+-- ë°ì´í„° ìˆ˜ì •
+/*
+    ë¬¸ì œ 4 ]
+        emp1 í…Œì´ë¸”ì—ì„œ ë‹¤ìŒ ë°ì´í„°ë¥¼ ìˆ˜ì •í•˜ì„¸ìš”.
+        ì œë‹ˆ, ë¡œì œ, ë¦¬ì‚¬, ì§€ìˆ˜
+        ì‚¬ì›ì˜ ì´ë¦„ì„ ì´ë¦„ì•žì— 'Miss.' ë¶™ì—¬ì„œ
+        ì´ë¦„ì´ ë§Œë“¤ì–´ì§€ê²Œ ìˆ˜ì •í•˜ì„¸ìš”.
+        ë‚˜ë¨¸ì§€ì‚¬ì›ë“¤ì€ ì´ë¦„ì•žì— 'Mr.' ì„ ë¶™ì—¬ì„œ 
+        ìˆ˜ì •í•˜ì„¸ìš”.
+*/
+
+UPDATE EMP1
+SET ENAME = DECODE(ENAME,'ì œë‹ˆ','Miss.'||ename,
+                        'ì§€ìˆ˜','Miss.'||ename,
+                        'ë¡œì œ','Miss.'||ename,
+                        'ë¦¬ì‚¬','Miss.'||ename,
+                        'Mr.'||ename)
+                    ;
+
+
+
+
+UPDATE
+    emp1
+SET
+    ename = DECODE(ename, 'ì œë‹ˆ', 'Miss.' || ename,
+                          'ë¦¬ì‚¬', 'Miss.' || ename,
+                          'ë¡œì œ', 'Miss.' || ename,
+                          'ì§€ìˆ˜', 'Miss.' || ename,
+                          'Mr.' || ename
+    )
+;
+
+ALTER TABLE EMP1
+MODIFY ENAME VARCHAR2(15 CHAR);
+
+/*
+    ë¬¸ì œ 5 ]
+        emp1 í…Œì´ë¸”ì—ì„œ 
+        ìž…ì‚¬ë…„ë„ê°€ 81ë…„ ì¸ ì‚¬ì›ë§Œ
+        ê¸‰ì—¬ë¥¼ 25% ì¸ìƒí•˜ëŠ”ë° 10ë‹¨ìœ„ ì´í•˜ëŠ” 
+        ë²„ë¦¼ìœ¼ë¡œ ì²˜ë¦¬í•˜ì„¸ìš”.
 */
 
 
 
+UPDATE EMP1
+SET SAL = ROUND(SAL*1.25,-2)
+WHERE TO_CHAR(HIREDATE,'YY') = '81';
 
+
+-- ë‹¤ë¥¸ í…Œì´ë¸”ì˜ ë°ì´í„° ë³µì‚¬
 /*
-    ¹®Á¦ 5 ]
-        emp1 Å×ÀÌºí¿¡¼­ 
-        ÀÔ»ç³âµµ°¡ 81³â ÀÎ »ç¿ø¸¸
-        ±Þ¿©¸¦ 25% ÀÎ»óÇÏ´Âµ¥ 10´ÜÀ§ ÀÌÇÏ´Â 
-        ¹ö¸²À¸·Î Ã³¸®ÇÏ¼¼¿ä.
+    ë¬¸ì œ 6 ]
+        emp í…Œì´ë¸”ì˜ 'SMITH' ì‚¬ì›ì˜ ë°ì´í„°ë¥¼ ë³µì‚¬í•´ì„œ
+        emp1 í…Œì´ë¸”ì— ìž…ë ¥í•˜ì„¸ìš”.
+*/
+INSERT INTO EMP1
+(
+    SELECT *
+    FROM EMP
+    WHERE ENAME = 'SMITH'
+);
+
+
+
+-- ë°ì´í„° ì‚­ì œ
+/*
+    ë¬¸ì œ 7 ]
+        emp1 í…Œì´ë¸”ì—ì„œ ë¶€ì„œë²ˆí˜¸ê°€ 10ë²ˆì¸ ì‚¬ì›ë§Œ ì‚­ì œí•˜ì„¸ìš”.
+*/
+DELETE
+FROM EMP1
+WHERE DEPTNO = 10;
+/*
+    ë¬¸ì œ 8 ]
+        emp1 í…Œì´ë¸”ì—ì„œ ì´ë¦„ì´ 'H'ë¡œ ëë‚˜ëŠ” ì‚¬ì›ë§Œ ì‚­ì œí•˜ì„¸ìš”.
 */
 
--- ´Ù¸¥ Å×ÀÌºíÀÇ µ¥ÀÌÅÍ º¹»ç
-/*
-    ¹®Á¦ 6 ]
-        emp Å×ÀÌºíÀÇ 'SMITH' »ç¿øÀÇ µ¥ÀÌÅÍ¸¦ º¹»çÇØ¼­
-        emp1 Å×ÀÌºí¿¡ ÀÔ·ÂÇÏ¼¼¿ä.
-*/
-
--- µ¥ÀÌÅÍ »èÁ¦
-/*
-    ¹®Á¦ 7 ]
-        emp1 Å×ÀÌºí¿¡¼­ ºÎ¼­¹øÈ£°¡ 10¹øÀÎ »ç¿ø¸¸ »èÁ¦ÇÏ¼¼¿ä.
-*/
-
-/*
-    ¹®Á¦ 8 ]
-        emp1 Å×ÀÌºí¿¡¼­ ÀÌ¸§ÀÌ 'H'·Î ³¡³ª´Â »ç¿ø¸¸ »èÁ¦ÇÏ¼¼¿ä.
-*/
+DELETE
+FROM EMP1
+WHERE ENAME LIKE '%H';
