@@ -1,371 +1,253 @@
 /*
-    ¹®Á¦ 1 ]
-        ÀÌ¸§ÀÌ SMITHÀÎ »ç¿ø°ú µ¿ÀÏÇÑ Á÷±ÞÀ» °¡Áø »ç¿øµéÀÇ Á¤º¸¸¦ Ãâ·ÂÇÏ¼¼¿ä.
+    ë¬¸ì œ 1 ]
+        ì´ë¦„ì´ SMITHì¸ ì‚¬ì›ê³¼ ë™ì¼í•œ ì§ê¸‰ì„ ê°€ì§„ ì‚¬ì›ë“¤ì˜ ì •ë³´ë¥¼ ì¶œë ¥í•˜ì„¸ìš”.
 */
+
 SELECT *
 FROM EMP
-WHERE JOB=(
-    SELECT JOB
-    FROM EMP
-    WHERE ENAME = 'SMITH'
-);
+WHERE JOB = ALL(
+        SELECT JOB
+        FROM EMP
+        WHERE ENAME = 'SMITH');
 
 /*
-    ¹®Á¦ 2 ]
-        È¸»ç Æò±Õ ±Þ¿©º¸´Ù ±Þ¿©¸¦ Àû°Ô ¹Þ´Â »ç¿øµéÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ±Þ¿©[, È¸»çÆò±Õ±Þ¿©]
-        ¸¦ Á¶È¸ÇÏ¼¼¿ä.
+    ë¬¸ì œ 2 ]
+        íšŒì‚¬ í‰ê·  ê¸‰ì—¬ë³´ë‹¤ ê¸‰ì—¬ë¥¼ ì ê²Œ ë°›ëŠ” ì‚¬ì›ë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ê¸‰ì—¬[, íšŒì‚¬í‰ê· ê¸‰ì—¬]
+        ë¥¼ ì¡°íšŒí•˜ì„¸ìš”.
 */
 
-SELECT ENAME »ç¿øÀÌ¸§, JOB Á÷±Þ, SAL ±Þ¿©
+--í‰ê· ê¸‰ì—¬
+SELECT ENAME ì‚¬ì›ì´ë¦„, JOB ì§ê¸‰, SAL ê¸‰ì—¬, AVERAGE í‰ê· 
+FROM EMP E, (SELECT FLOOR(AVG(SAL)) AVERAGE 
+            FROM EMP)
+WHERE  E.SAL = SAL AND    
+        SAL< ALL( 
+                SELECT AVG(SAL)
+                FROM EMP
+                );
+
+/*
+    ë¬¸ì œ 3 ]
+        ì‚¬ì›ë“¤ì¤‘ ê¸‰ì—¬ê°€ ì œì¼ ë†’ì€ ì‚¬ì›ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ê¸‰ì—¬[, ìµœê³ ê¸‰ì—¬]
+        ë¥¼ ì¡°íšŒí•˜ì„¸ìš”.
+*/
+
+--ê¸‰ì—¬ê°€ ì œì¼ ë†’ì€ ì‚¬ì›
+
+SELECT ENAME ì‚¬ì›ì´ë¦„, JOB ì§ê¸‰, SAL ê¸‰ì—¬
 FROM EMP
-WHERE SAL< ALL(
-    SELECT AVG(SAL)
-    FROM EMP
-);
-
-
+WHERE SAL = (SELECT MAX(SAL)
+             FROM EMP);
 
 
 /*
-    ¹®Á¦ 3 ]
-        »ç¿øµéÁß ±Þ¿©°¡ Á¦ÀÏ ³ôÀº »ç¿øÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ±Þ¿©[, ÃÖ°í±Þ¿©]
-        ¸¦ Á¶È¸ÇÏ¼¼¿ä.
+    ë¬¸ì œ 4 ]
+        KING ì‚¬ì›ë³´ë‹¤ ì´í›„ì— ìž…ì‚¬í•œ ì‚¬ì›ë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ìž…ì‚¬ì¼[, KINGì‚¬ì›ìž…ì‚¬ì¼]
+        ì„ ì¡°íšŒí•˜ì„¸ìš”.
 */
-
-SELECT ENAME »ç¿øÀÌ¸§, JOB Á÷±Þ, SAL ±Þ¿©
-FROM EMP
-WHERE SAL = (
-SELECT MAX(SAL)
-FROM EMP);
-/*
-    ¹®Á¦ 4 ]
-        KING »ç¿øº¸´Ù ÀÌÈÄ¿¡ ÀÔ»çÇÑ »ç¿øµéÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ÀÔ»çÀÏ[, KING»ç¿øÀÔ»çÀÏ]
-        À» Á¶È¸ÇÏ¼¼¿ä.
-*/
-SELECT ENAME, SAL, HIREDATE
-FROM EMP
-WHERE HIREDATE>ALL(
-SELECT HIREDATE
-FROM EMP
-WHERE ENAME = 'KING'
-);
-
+--KING ìž…ì‚¬ì¼
+SELECT E.ENAME ì‚¬ì›ì´ë¦„, E.JOB ì§ê¸‰, E.HIREDATE ìž…ì‚¬ì¼, HIRE KINGìž…ì‚¬
+FROM EMP E, (SELECT HIREDATE HIRE
+                FROM EMP
+                WHERE ENAME = 'KING')
+WHERE E.HIREDATE>(SELECT HIREDATE
+                FROM EMP
+                WHERE ENAME = 'KING');
+           
 
 /*
-    ¹®Á¦ 5 ]
-        °¢ »ç¿øÀÇ ±Þ¿©¿Í È¸»çÆò±Õ±Þ¿©ÀÇ Â÷¸¦ Ãâ·ÂÇÏ¼¼¿ä.
-        Á¶È¸Çü½ÄÀº
-            »ç¿øÀÌ¸§, ±Þ¿©, ±Þ¿©ÀÇ Â÷, È¸»çÆò±Õ±Þ¿©
-        ·Î Á¶È¸ÇÏ¼¼¿ä.
+    ë¬¸ì œ 5 ]
+        ê° ì‚¬ì›ì˜ ê¸‰ì—¬ì™€ íšŒì‚¬í‰ê· ê¸‰ì—¬ì˜ ì°¨ë¥¼ ì¶œë ¥í•˜ì„¸ìš”.
+        ì¡°íšŒí˜•ì‹ì€
+            ì‚¬ì›ì´ë¦„, ê¸‰ì—¬, ê¸‰ì—¬ì˜ ì°¨, íšŒì‚¬í‰ê· ê¸‰ì—¬
+        ë¡œ ì¡°íšŒí•˜ì„¸ìš”.
 */
-SELECT ENAME »ç¿øÀÌ¸§, SAL ±Þ¿©, SAL-(
-SELECT FLOOR(AVG(SAL)) AVG
-FROM EMP) ±Þ¿©Â÷ÀÌ
-FROM EMP;
 
-
+SELECT E.ENAME ì‚¬ì›ì´ë¦„, E.SAL-AVGSAL "ê¸‰ì—¬ì˜ ì°¨", AVGSAL íšŒì‚¬í‰ê· ê¸‰ì—¬
+FROM EMP E, (SELECT ROUND(AVG(SAL),2) AVGSAL
+                            FROM EMP);
 
 /*
-    ¹®Á¦ 6 ]
-        ºÎ¼­º° ±Þ¿©ÀÇ ÇÕÀÌ Á¦ÀÏ ³ôÀº ºÎ¼­ »ç¿øµéÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ºÎ¼­¹øÈ£, ºÎ¼­ÀÌ¸§, ºÎ¼­±Þ¿©ÇÕ°è, ºÎ¼­¿ø¼ö
-        ¸¦ Á¶È¸ÇÏ¼¼¿ä.
+    ë¬¸ì œ 6 ]
+        ë¶€ì„œë³„ ê¸‰ì—¬ì˜ í•©ì´ ì œì¼ ë†’ì€ ë¶€ì„œ ì‚¬ì›ë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ë¶€ì„œë²ˆí˜¸, ë¶€ì„œì´ë¦„, ë¶€ì„œê¸‰ì—¬í•©ê³„, ë¶€ì„œì›ìˆ˜
+        ë¥¼ ì¡°íšŒí•˜ì„¸ìš”.
 */
 
 
-
-
-
-
---ºÎ¼­ ±Þ¿©ÀÇ ÇÕÀÌ °¡Àå ³ôÀº ºÎ¼­ Á¶È¸
+-- ë¶€ì„œë³„ ê¸‰ì—¬ì˜ í•©ì´ ì œì¼ ë†’ì€ ë¶€ì„œ
 SELECT MAX(SUM(SAL))
-FROM EMP
-GROUP BY DEPTNO;
-
-
-
---°¡Àå ³ôÀººÎ¼­ÃßÃâ »ç¿øÀÌ¸§, Á÷±Þ, ºÎ¼­¹øÈ£, ºÎ¼­ÀÌ¸§, ºÎ¼­±Þ¿©ÇÕ°è, ºÎ¼­¿ø¼ö
-
-SELECT DEPTNO
 FROM EMP
 GROUP BY DEPTNO
-HAVING
-    
-    SUM(SAL)=(SELECT MAX(SUM(SAL))
-                FROM EMP
-                GROUP BY DEPTNO);
+HAVING SUM(SAL) = MAX(SUM(SAL));
 
-
---»ç¿øÀÌ¸§, Á÷±Þ, ºÎ¼­¹øÈ£, ºÎ¼­ÀÌ¸§, ºÎ¼­±Þ¿©ÇÕ°è, ºÎ¼­¿ø¼ö ÃßÃâ
-SELECT E.ENAME, D.DNAME,NO ,SM,CNT
-FROM EMP E, DEPT D , (SELECT DEPTNO NO, SUM(SAL) SM, COUNT(SAL) CNT
-                        FROM EMP
-                     GROUP BY DEPTNO
-                     HAVING
-                     SUM(SAL)= (SELECT MAX(SUM(SAL))
-                                FROM EMP
-                                GROUP BY DEPTNO))            
-WHERE E.DEPTNO = D.DEPTNO AND E.DEPTNO = (
-                    SELECT DEPTNO
-                    FROM EMP
-                    GROUP BY DEPTNO
-                    HAVING   
-                    SUM(SAL)=(SELECT MAX(SUM(SAL))
-                    FROM EMP
-                    GROUP BY DEPTNO));                     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---ºÎ¼­º° ±Þ¿©ÀÇ ÇÕÀÌ °¡Àå ³ôÀº
-SELECT MAX(SUM(SAL))
- FROM EMP
- GROUP BY DEPTNO;
- 
---ºÎ¼­º° ±Þ¿©ÀÇ ÇÕÀÌ °¡Àå ³ôÀº ºÎ¼­ 
-
-SELECT E.ENAME »ç¿øÀÌ¸§, E.JOB Á÷±Þ, DEPT ºÎ¼­¹øÈ£,D.DNAME ºÎ¼­ÀÌ¸§, SALSUM ºÎ¼­±Þ¿©ÇÕ°è, CNT ºÎ¼­¿ø¼ö
-FROM EMP E, DEPT D,(
-    SELECT DEPTNO DEPT, SUM(SAL) SALSUM, COUNT(*) CNT
-    FROM EMP
-    GROUP BY DEPTNO
-    HAVING SUM(SAL) = (
-            SELECT MAX(SUM(SAL))
-            FROM EMP
-            GROUP BY DEPTNO
-    )
-   )
-WHERE E.DEPTNO = D.DEPTNO   
-;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-SELECT E.ENAME ÀÌ¸§, DEPT ºÎ¼­ÄÚµå, CNT ÀÎ¿ø,SU ±Þ¿©ÀÇÇÕ , DEPT.DNAME ºÎ¼­ÀÌ¸§
-FROM EMP E, DEPT,(
-    SELECT DEPTNO DEPT, COUNT(*) CNT, SUM(SAL) SU
-    FROM EMP
-    GROUP BY DEPTNO
- HAVING 
-    SUM(SAL) = ( 
-                SELECT MAX(SUM(SAL))
-                FROM EMP
-                GROUP BY DEPTNO 
-                )
-)
-WHERE E.DEPTNO = DEPT.DEPTNO;
-
-     
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- SELECT DEPTNO
- FROM EMP
- GROUP BY DEPTNO
- HAVING SUM(SAL) = (
-SELECT MAX(SUM(SAL))
- FROM EMP
- GROUP BY DEPTNO );
- 
--- »ç¿øÀÌ¸§, Á÷±Þ, ºÎ¼­¹øÈ£, ºÎ¼­ÀÌ¸§, ºÎ¼­±Þ¿©ÇÕ°è, ºÎ¼­¿ø¼ö¸¦ Á¶È¸ÇÏ¼¼¿ä.
-        
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- SELECT E.ENAME, E.JOB, E.DEPTNO, E.SAL, D.DNAME
- FROM EMP E, DEPT D
- WHERE 
-    D.DEPTNO = E.DEPTNO AND
-    E.DEPTNO IN (
-                    SELECT DEPTNO
-                    FROM EMP
-                    GROUP BY DEPTNO
-                    HAVING SUM(SAL) = (
+--ë¶€ì„œ ì¶”ì¶œ
+SELECT DEPTNO, COUNT(*)
+FROM EMP
+GROUP BY DEPTNO
+HAVING SUM(SAL) = (
                     SELECT MAX(SUM(SAL))
+                    FROM EMP    
+                    GROUP BY DEPTNO);
+                    
+--ì‚¬ì›ì´ë¦„, ì§ê¸‰, ë¶€ì„œë²ˆí˜¸, ë¶€ì„œì´ë¦„, ë¶€ì„œê¸‰ì—¬í•©ê³„, ë¶€ì„œì›ìˆ˜
+
+SELECT E.ENAME ì‚¬ì›ì´ë¦„, D.DNAME ë¶€ì„œì´ë¦„, SUM, CNT ë¶€ì„œì›ìˆ˜, E.DEPTNO ë¶€ì„œë²ˆí˜¸
+FROM EMP E,DEPT D, (SELECT SUM(SAL) SUM, COUNT(*) CNT
                     FROM EMP
                     GROUP BY DEPTNO
-    )
- );
- 
- 
-    
- SELECT DEPTNO
- FROM EMP
- GROUP BY DEPTNO
- HAVING SUM(SAL) = (
- SELECT
- MAX(SUM(SAL)
- FROM EMP
- GROUP BY DEPTNO
- )
+                    HAVING SUM(SAL) =  (
+                                        SELECT MAX(SUM(SAL))
+                                        FROM EMP    
+                                        GROUP BY DEPTNO)
+                                        )
+WHERE E.DEPTNO = D.DEPTNO AND 
+      E.DEPTNO = (SELECT DEPTNO DEP
+                    FROM EMP
+                    GROUP BY DEPTNO
+                    HAVING SUM(SAL) =  (
+                                        SELECT MAX(SUM(SAL))
+                                        FROM EMP    
+                                        GROUP BY DEPTNO)
+                                        )
+        ;
 
 
+
+
+/*
  
  
  
-¹®Á¦ 7 ]
-        Ä¿¹Ì¼ÇÀ» ¹Þ´Â »ç¿øÀÌ ÇÑ¸íÀÌ¶óµµ ÀÖ´Â ºÎ¼­ÀÇ »ç¿øµéÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ºÎ¼­¹øÈ£, Ä¿¹Ì¼Ç
-        À» Á¶È¸ÇÏ¼¼¿ä.
+ë¬¸ì œ 7 ]
+        ì»¤ë¯¸ì…˜ì„ ë°›ëŠ” ì‚¬ì›ì´ í•œëª…ì´ë¼ë„ ìžˆëŠ” ë¶€ì„œì˜ ì‚¬ì›ë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ë¶€ì„œë²ˆí˜¸, ì»¤ë¯¸ì…˜
+        ì„ ì¡°íšŒí•˜ì„¸ìš”.
 */
 
-SELECT ENAME »ç¿øÀÌ¸§, JOB Á÷±Þ, DEPTNO ºÎ¼­¹øÈ£, COMM Ä¿¹Ì¼Ç
+
+--ì»¤ë¯¸ì…˜ ë¶€ì„œì´ë¦„ ì¶”ì¶œ
+
+SELECT ENAME ì‚¬ì›ì´ë¦„, JOB ì§ê¸‰, DEPTNO ë¶€ì„œë²ˆí˜¸, COMM ì»¤ë¯¸ì…˜
 FROM EMP
-WHERE DEPTNO = ALL(
-    SELECT DEPTNO
-    FROM EMP
-    WHERE COMM IS NOT NULL AND COMM <>0)
+WHERE DEPTNO = (    SELECT DEPTNO
+                    FROM EMP
+                    GROUP BY DEPTNO
+                    HAVING DEPTNO = ANY 
+                        (SELECT DEPTNO
+                        FROM EMP
+                        WHERE COMM IS NOT NULL));
+
+/*
+    ë¬¸ì œ 8 ]
+        íšŒì‚¬ í‰ê· ê¸‰ì—¬ë³´ë‹¤ ë†’ê³  
+        ì´ë¦„ì´ 4, 5ê¸€ìžì¸ ì‚¬ì›ë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ê¸‰ì—¬, ì´ë¦„ê¸€ìžê¸¸ì´[, íšŒì‚¬í‰ê· ê¸‰ì—¬]
+        ë¥¼ ì¡°íšŒí•˜ì„¸ìš”.
+*/
+
+
+SELECT ENAME ì´ë¦„, SAL ê¸‰ì—¬, LENGTH(ENAME) ì´ë¦„ê¸¸ìžê¸¸ì´, FLOOR(AVG) íšŒì‚¬í‰ê· ê¸‰ì—¬
+FROM EMP, (
+            SELECT AVG(SAL) AVG
+            FROM EMP)
+WHERE LENGTH(ENAME) BETWEEN 4 AND 5 AND
+      SAL>(
+            SELECT AVG(SAL)
+            FROM EMP);
+            
+      
+
+
+
+
+/*
+    ë¬¸ì œ 9 ]
+        ì‚¬ì›ì´ë¦„ì˜ ê¸€ìžìˆ˜ê°€ 4ê¸€ìžì¸ ì‚¬ì›ê³¼ ê°™ì€ ì§ê¸‰ì„ ê°€ì§„ ì‚¬ì›Œë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ê¸‰ì—¬
+        ë¥¼ ì¡°íšŒí•˜ì„¸ìš”.
+*/
+
+--4ê¸€ìžì¸ ì‚¬ì› ë¶€ì„œ
+SELECT JOB
+FROM EMP
+WHERE LENGTH(ENAME)= 4;
+
+
+
+SELECT ENAME ì‚¬ì›ì´ë¦„, JOB ì§ê¸‰ , SAL ê¸‰ì—¬
+FROM EMP
+WHERE JOB IN (SELECT JOB
+              FROM EMP
+              WHERE LENGTH(ENAME)= 4)
+;           
+
+            
+/*
+    ë¬¸ì œ 10 ]
+        ìž…ì‚¬ë…„ë„ê°€ 81ë…„ì´ ì•„ë‹Œ ì‚¬ì›ê³¼ ê°™ì€ ë¶€ì„œì— ìžˆëŠ” ì‚¬ì›ë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ê¸‰ì—¬, ìž…ì‚¬ì¼, ë¶€ì„œë²ˆí˜¸
+        ì„ ì¡°íšŒí•˜ì„¸ìš”.
+*/
+
+SELECT ENAME ì‚¬ì›ì´ë¦„, JOB ì§ê¸‰, SAL ê¸‰ì—¬, HIREDATE ìž…ì‚¬ì¼, DEPTNO ë¶€ì„œë²ˆí˜¸
+FROM EMP
+WHERE DEPTNO IN (SELECT DEPTNO
+                FROM EMP
+                WHERE TO_CHAR(HIREDATE,'YY')<>'81')
 ;
 
+/*
+    ë¬¸ì œ 11 ]
+        ì§ê¸‰ë³„ í‰ê· ê¸‰ì—¬ë³´ë‹¤ í•œ ì§ê¸‰ì´ë¼ë„ ê¸‰ì—¬ê°€ ë§Žì´ ë°›ëŠ” ì‚¬ì›ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ê¸‰ì—¬, ìž…ì‚¬ì¼
+        ì„ ì¡°íšŒí•˜ì„¸ìš”.
+*/
+SELECT ENAME ì‚¬ì›ì´ë¦„, JOB ì§ê¸‰, SAL ê¸‰ì—¬, HIREDATE ìž…ì‚¬ì¼ 
+FROM EMP
+WHERE SAL> ANY (SELECT AVG(SAL)
+                FROM EMP
+                GROUP BY JOB);
 
 /*
-    ¹®Á¦ 8 ]
-        È¸»ç Æò±Õ±Þ¿©º¸´Ù ³ô°í 
-        ÀÌ¸§ÀÌ 4, 5±ÛÀÚÀÎ »ç¿øµéÀÇ
-        »ç¿øÀÌ¸§, ±Þ¿©, ÀÌ¸§±ÛÀÚ±æÀÌ[, È¸»çÆò±Õ±Þ¿©]
-        ¸¦ Á¶È¸ÇÏ¼¼¿ä.
+    ë¬¸ì œ 12 ]
+        ëª¨ë“  ë…„ë„ë³„ ìž…ì‚¬ìžì˜ í‰ê·  ê¸‰ì—¬ë³´ë‹¤ ë§Žì´ ë°›ëŠ” ì‚¬ì›ë“¤ì˜
+        ì‚¬ì›ì´ë¦„, ì§ê¸‰, ê¸‰ì—¬, ìž…ì‚¬ë…„ë„
+        ë¥¼ ì¡°íšŒí•˜ì„¸ìš”.
 */
 
-SELECT ENAME »ç¿øÀÌ¸§, SAL ±Þ¿©, LENGTH(ENAME) ÀÌ¸§±æÀÌ
+
+SELECT ENAME ì‚¬ì›ì´ë¦„, JOB ì§ê¸‰, SAL ê¸‰ì—¬, TO_CHAR(HIREDATE,'YY')||'ë…„' ìž…ì‚¬ë…„ë„
 FROM EMP
-WHERE SAL>(
-    SELECT AVG(SAL)
-    FROM EMP
-    WHERE LENGTH(ENAME) BETWEEN 4 AND 5
-
-);
+WHERE SAL>ALL (SELECT AVG(SAL)
+                FROM EMP
+                GROUP BY TO_CHAR(HIREDATE,'YY'));
 
 
 
-/*
-    ¹®Á¦ 9 ]
-        »ç¿øÀÌ¸§ÀÇ ±ÛÀÚ¼ö°¡ 4±ÛÀÚÀÎ »ç¿ø°ú °°Àº Á÷±ÞÀ» °¡Áø »ç¿öµéÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ±Þ¿©
-        ¸¦ Á¶È¸ÇÏ¼¼¿ä.
-*/
-
-SELECT ENAME »ç¿øÀÌ¸§, JOB Á÷±Þ, SAL ±Þ¿©
-FROM EMP
-WHERE JOB = ANY(
-    SELECT JOB
-    FROM EMP
-    WHERE LENGTH(ENAME) = 4
-);
-
-
-
-/*
-    ¹®Á¦ 10 ]
-        ÀÔ»ç³âµµ°¡ 81³âÀÌ ¾Æ´Ñ »ç¿ø°ú °°Àº ºÎ¼­¿¡ ÀÖ´Â »ç¿øµéÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ±Þ¿©, ÀÔ»çÀÏ, ºÎ¼­¹øÈ£
-        À» Á¶È¸ÇÏ¼¼¿ä.
-*/
-SELECT ENAME »ç¿øÀÌ¸§, JOB Á÷±Þ, SAL ±Þ¿©, TO_CHAR(HIREDATE,'YY') ÀÔ»çÀÏ, DEPTNO ºÎ¼­¹øÈ£ 
-FROM EMP
-WHERE DEPTNO =ANY (
-    SELECT DEPTNO
-    FROM EMP
-    WHERE TO_CHAR(HIREDATE, 'YY') <> '81');
-
-/*
-    ¹®Á¦ 11 ]
-        Á÷±Þº° Æò±Õ±Þ¿©º¸´Ù ÇÑ Á÷±ÞÀÌ¶óµµ ±Þ¿©°¡ ¸¹ÀÌ ¹Þ´Â »ç¿øÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ±Þ¿©, ÀÔ»çÀÏ
-        À» Á¶È¸ÇÏ¼¼¿ä.
-*/
-
-SELECT ENAME ÀÌ¸§, JOB Á÷±Þ, SAL ±Þ¿©, HIREDATE ÀÔ»çÀÏ
-FROM EMP
-WHERE SAL> ANY(
+--ë…„ë„ë³„ ìž…ì‚¬ìžì˜ í‰ê· ê¸‰ì—¬
 SELECT AVG(SAL)
 FROM EMP
-GROUP BY DEPTNO);
+GROUP BY TO_CHAR(HIREDATE,'YY');
 
 
-/*
-    ¹®Á¦ 12 ]
-        ¸ðµç ³âµµº° ÀÔ»çÀÚÀÇ Æò±Õ ±Þ¿©º¸´Ù ¸¹ÀÌ ¹Þ´Â »ç¿øµéÀÇ
-        »ç¿øÀÌ¸§, Á÷±Þ, ±Þ¿©, ÀÔ»ç³âµµ
-        ¸¦ Á¶È¸ÇÏ¼¼¿ä.
-*/
-
---³âµµº° ÀÔ»çÀÚ Æò±Õ°ª »êÃâ
- SELECT AVG(SAL)
-    FROM EMP
-    GROUP BY TO_CHAR(HIREDATE,'YY');
-    
---ÀÔ»çÀÚº¸´Ù ¸¹ÀÌ ¹Þ´Â..
-
-SELECT ENAME »ç¿øÀÌ¸§, JOB Á÷±Þ, HIREDATE ÀÔ»ç³âµµ, SAL ±Þ¿©
-FROM EMP
-WHERE SAL> ALL( SELECT AVG(SAL)
-    FROM EMP
-    GROUP BY TO_CHAR(HIREDATE,'YY'));
 
 
 
 /*
-    ¹®Á¦ 13 ]
-        ÃÖ°í±Þ¿©ÀÚÀÇ ÀÌ¸§ ±ÛÀÚ¼ö¿Í °°Àº ±ÛÀÚ¼öÀÇ Á÷¿øÀÌ Á¸ÀçÇÏ¸é
-        ¸ðµç »ç¿øÀÇ »ç¿øÀÌ¸§, ÀÌ¸§±ÛÀÚ¼ö, Á÷±Þ, ±Þ¿© ¸¦ Á¶È¸ÇÏ°í
-        Á¸ÀçÇÏÁö ¾ÊÀ¸¸é Ãâ·ÂÇÏÁö¸¶¼¼¿ä.
+    ë¬¸ì œ 13 ]
+        ìµœê³ ê¸‰ì—¬ìžì˜ ì´ë¦„ ê¸€ìžìˆ˜ì™€ ê°™ì€ ê¸€ìžìˆ˜ì˜ ì§ì›ì´ ì¡´ìž¬í•˜ë©´
+        ëª¨ë“  ì‚¬ì›ì˜ ì‚¬ì›ì´ë¦„, ì´ë¦„ê¸€ìžìˆ˜, ì§ê¸‰, ê¸‰ì—¬ ë¥¼ ì¡°íšŒí•˜ê³ 
+        ì¡´ìž¬í•˜ì§€ ì•Šìœ¼ë©´ ì¶œë ¥í•˜ì§€ë§ˆì„¸ìš”.
 */
 
-SELECT ENAME ÀÌ¸§, LENGTH(ENAME) ±ÛÀÚ¼ö, JOB Á÷±Þ, SAL ±Þ¿©
+--ìµœê³ ê¸‰ì—¬ìžì™€ ê°™ì€ ê¸€ìžìˆ˜ì˜ ì§ì›
+SELECT ENAME ì‚¬ì›ì´ë¦„, LENGTH(ENAME) ì´ë¦„ê¸€ìžìˆ˜, JOB ì§ê¸‰, SAL ê¸‰ì—¬
 FROM EMP
-WHERE LENGTH(ENAME) = ALL (   
-    SELECT LENGTH(ENAME)
-    FROM EMP
-    WHERE LENGTH(ENAME)=LENGTH('ÃÖ°í±Þ¿©ÀÚ')
-);
+WHERE LENGTH(ENAME)=LENGTH('ìµœê³ ê¸‰ì—¬ìž');
+
+
+
