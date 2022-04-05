@@ -1,0 +1,24 @@
+--EMPLOYEE 테이블의 사원들 중 전화번호가 011로 시작하는 사원들만 조회해서 
+--다섯명씩 한페이지에 보여주려고 한다.
+--3페이지에 표시될 사원을 조회하세요
+--이름순(first_name)으로 정렬해서 보여주세요.
+
+SELECT  *
+FROM    EMPLOYEES
+WHERE  PHONE_NUMBER LIKE '011%'
+ORDER BY FIRST_NAME ASC;
+
+
+SELECT *
+FROM (
+    SELECT ROWNUM NUM, EM.*
+    FROM
+        (
+         SELECT  *
+         FROM    EMPLOYEES
+         WHERE  SUBSTR(PHONE_NUMBER,0,3) ='011'
+         ORDER BY FIRST_NAME ASC
+        )EM
+        )
+WHERE NUM BETWEEN 11 AND 15
+;
